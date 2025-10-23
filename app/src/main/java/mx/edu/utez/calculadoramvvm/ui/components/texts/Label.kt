@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun Label(
     text: String,
-    fontSize: Int = 15,
+    fontSize: Int = 16,
     color: Color = Color.Black,
     textAlign: TextAlign = TextAlign.Start,
     modifier: Modifier = Modifier
