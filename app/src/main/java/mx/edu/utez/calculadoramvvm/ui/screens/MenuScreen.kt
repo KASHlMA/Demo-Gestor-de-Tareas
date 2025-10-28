@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
@@ -23,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -44,6 +44,10 @@ import mx.edu.utez.calculadoramvvm.viewmodel.MenuViewModel
 fun MenuScreen(viewModel: MenuViewModel, navController: NavController) {
 
     var showDialog by remember { mutableStateOf(false) }
+
+    var showEditDialog by remember { mutableStateOf(false) }
+    var editTitle by remember { mutableStateOf("") }
+    var editDescription by remember { mutableStateOf("") }
 
     if (showDialog) {
         AlertDialog(
@@ -75,10 +79,56 @@ fun MenuScreen(viewModel: MenuViewModel, navController: NavController) {
         )
     }
 
+    if (showEditDialog) {
+        AlertDialog(
+            onDismissRequest = { showEditDialog = false },
+            title = {
+                Text("Editar")
+            },
+            text = {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text("Titulo de la tarea")
+                    OutlinedTextField(
+                        value = editTitle,
+                        onValueChange = { editTitle = it },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Text("Descripcion de la tarea")
+                    OutlinedTextField(
+                        value = editDescription,
+                        onValueChange = { editDescription = it },
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showEditDialog = false
+                    }
+                ) {
+                    Text("Editar")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        showEditDialog = false
+                    }
+                ) {
+                    Text("Cancelar")
+                }
+            }
+        )
+    }
+
+
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {  },
+                onClick = { },
                 containerColor = Color.White
             ) {
                 Icon(
@@ -206,7 +256,11 @@ fun MenuScreen(viewModel: MenuViewModel, navController: NavController) {
                                 color = Color.Black
                             )
                             IconButton(
-                                onClick = { /* Solo diseño */ }
+                                onClick = {
+                                    editTitle = "Ejercicio 1"
+                                    editDescription = "Hacer la plataforma antes del sabado"
+                                    showEditDialog = true
+                                }
                             ) {
                                 Icon(
                                     Icons.Default.Edit,
@@ -258,7 +312,11 @@ fun MenuScreen(viewModel: MenuViewModel, navController: NavController) {
                                 color = Color.Black
                             )
                             IconButton(
-                                onClick = { /* Solo diseño */ }
+                                onClick = {
+                                    editTitle = "Calculo de variables"
+                                    editDescription = "Terminar los ejercicios de derivadas"
+                                    showEditDialog = true
+                                }
                             ) {
                                 Icon(
                                     Icons.Default.Edit,
