@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -23,7 +24,12 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,6 +42,39 @@ import mx.edu.utez.calculadoramvvm.viewmodel.MenuViewModel
 
 @Composable
 fun MenuScreen(viewModel: MenuViewModel, navController: NavController) {
+
+    var showDialog by remember { mutableStateOf(false) }
+
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = {
+                Text(text = "Eliminar")
+            },
+            text = {
+                Text("Estas seguro que deseas eliminar")
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showDialog = false
+                    }
+                ) {
+                    Text("Eliminar")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        showDialog = false
+                    }
+                ) {
+                    Text("Cancelar")
+                }
+            }
+        )
+    }
+
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
@@ -58,10 +97,8 @@ fun MenuScreen(viewModel: MenuViewModel, navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            // Imagen del perfil
             CircularImage(R.drawable.maleprofile)
 
-            // Header con información del usuario y cerrar sesión
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -76,7 +113,7 @@ fun MenuScreen(viewModel: MenuViewModel, navController: NavController) {
                 ) {
                     Icon(
                         Icons.Default.ExitToApp,
-                        contentDescription = "Cerrar sesión",
+                        contentDescription = "Cerrar sesion",
                         tint = Color.White
                     )
                 }
@@ -91,14 +128,13 @@ fun MenuScreen(viewModel: MenuViewModel, navController: NavController) {
                         color = Color.White
                     )
                     Text(
-                        text = "Keilo Vuctoría Gonzalez",
+                        text = "Keilo Vuctoria Gonzalez",
                         style = MaterialTheme.typography.bodyMedium,
                         color = Color.White
                     )
                 }
             }
 
-            // Barra de búsqueda
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 elevation = CardDefaults.cardElevation(4.dp),
@@ -126,12 +162,10 @@ fun MenuScreen(viewModel: MenuViewModel, navController: NavController) {
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // Lista de tareas
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Tarea 1 - Ejercicio 1
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     elevation = CardDefaults.cardElevation(4.dp),
@@ -152,7 +186,7 @@ fun MenuScreen(viewModel: MenuViewModel, navController: NavController) {
                                 color = Color.Black
                             )
                             IconButton(
-                                onClick = { /* Solo diseño */ }
+                                onClick = { showDialog = true }
                             ) {
                                 Icon(
                                     Icons.Default.Delete,
@@ -184,7 +218,6 @@ fun MenuScreen(viewModel: MenuViewModel, navController: NavController) {
                     }
                 }
 
-                // Tarea 2 - Calculo de variables
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     elevation = CardDefaults.cardElevation(4.dp),
@@ -205,7 +238,7 @@ fun MenuScreen(viewModel: MenuViewModel, navController: NavController) {
                                 color = Color.Black
                             )
                             IconButton(
-                                onClick = { /* Solo diseño */ }
+                                onClick = { showDialog = true }
                             ) {
                                 Icon(
                                     Icons.Default.Delete,
