@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
@@ -48,6 +49,10 @@ fun MenuScreen(viewModel: MenuViewModel, navController: NavController) {
     var showEditDialog by remember { mutableStateOf(false) }
     var editTitle by remember { mutableStateOf("") }
     var editDescription by remember { mutableStateOf("") }
+
+    var showAddDialog by remember { mutableStateOf(false) }
+    var addTitle by remember { mutableStateOf("") }
+    var addDescription by remember { mutableStateOf("") }
 
     if (showDialog) {
         AlertDialog(
@@ -124,11 +129,66 @@ fun MenuScreen(viewModel: MenuViewModel, navController: NavController) {
         )
     }
 
+    if (showAddDialog) {
+        AlertDialog(
+            onDismissRequest = { showAddDialog = false },
+            title = {
+                Text("Agregar tarea")
+            },
+            text = {
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text("Titulo de la tarea")
+                    OutlinedTextField(
+                        value = addTitle,
+                        onValueChange = { addTitle = it },
+                        modifier = Modifier.fillMaxWidth(),
+                        placeholder = { Text("Ingles") }
+                    )
+                    Text("Descripcion de la tarea")
+                    OutlinedTextField(
+                        value = addDescription,
+                        onValueChange = { addDescription = it },
+                        modifier = Modifier.fillMaxWidth(),
+                        placeholder = { Text("Hacer la plataforma antes del sabado") }
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showAddDialog = false
+                        addTitle = ""
+                        addDescription = ""
+                    }
+                ) {
+                    Text("Agregar")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        showAddDialog = false
+                        addTitle = ""
+                        addDescription = ""
+                    }
+                ) {
+                    Text("Cancelar")
+                }
+            }
+        )
+    }
+
 
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { },
+                onClick = {
+                    addTitle = ""
+                    addDescription = ""
+                    showAddDialog = true
+                },
                 containerColor = Color.White
             ) {
                 Icon(
