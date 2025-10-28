@@ -178,9 +178,10 @@ fun MenuScreen(viewModel: MenuViewModel, navController: NavController) {
                         color = Color.White
                     )
                     Text(
-                        text = "Keilo Vuctoria Gonzalez",
+                        text = "Shasha Victoria Gonzalez",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Color.White
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold
                     )
                 }
             }
