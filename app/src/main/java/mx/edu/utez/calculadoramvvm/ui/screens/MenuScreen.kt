@@ -128,7 +128,7 @@ fun MenuScreen(viewModel: MenuViewModel, navController: NavController) {
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { },
+                onClick = { navController.navigate("add_task")},
                 containerColor = Color.White
             ) {
                 Icon(
@@ -147,7 +147,7 @@ fun MenuScreen(viewModel: MenuViewModel, navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            CircularImage(R.drawable.gatocar)
+            CircularImage(R.drawable.femaleprofile)
 
             Row(
                 modifier = Modifier.fillMaxWidth(),

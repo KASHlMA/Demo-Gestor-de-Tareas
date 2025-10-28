@@ -5,6 +5,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import mx.edu.utez.calculadoramvvm.ui.screens.AddTaskScreen
 import mx.edu.utez.calculadoramvvm.ui.screens.ForgotPasswordScreen
 import mx.edu.utez.calculadoramvvm.ui.screens.HomeScreen
 import mx.edu.utez.calculadoramvvm.ui.screens.LoginScreen
@@ -12,6 +13,7 @@ import mx.edu.utez.calculadoramvvm.ui.screens.MenuScreen
 import mx.edu.utez.calculadoramvvm.ui.screens.RegisterScreen
 
 import mx.edu.utez.calculadoramvvm.viewmodel.MenuViewModel
+import mx.edu.utez.calculadoramvvm.viewmodel.TaskViewModel
 import mx.edu.utez.gato.viewmodel.LoginViewModel
 
 @Composable
@@ -36,6 +38,12 @@ fun Navigation() {
             val viewModel: MenuViewModel = viewModel() // instancia del ViewModel
             MenuScreen(viewModel = viewModel, navController = navController)
         }
+
+        composable("add_task") {
+            val taskViewModel: TaskViewModel = viewModel()
+            AddTaskScreen(navController, taskViewModel)
+        }
+
 
 
 
