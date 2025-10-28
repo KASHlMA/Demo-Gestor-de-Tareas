@@ -78,7 +78,7 @@ fun MenuScreen(viewModel: MenuViewModel, navController: NavController) {
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { /* Solo diseño */ },
+                onClick = {  },
                 containerColor = Color.White
             ) {
                 Icon(

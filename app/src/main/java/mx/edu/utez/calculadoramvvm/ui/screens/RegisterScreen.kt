@@ -37,27 +37,23 @@ fun RegisterScreen(viewModel: LoginViewModel, navController: NavController) {
 
         Title("Bienvenido al registro del gestor de tareas")
 
-        // Campo de correo
         UserInputField(
             viewModel = viewModel,
             label = "Correo"
         )
 
-        // Campo de contraseña
         PasswordField(
             viewModel = viewModel,
             label = "Contraseña"
         )
 
-        // Botón de registro
         PrimaryButton("Registrarse") {
-            // Aquí podrías validar e insertar usuario
+
             navController.navigate("login") {
                 popUpTo("register") { inclusive = true }
             }
         }
 
-        // Mensaje de error opcional
         if (viewModel.loginError.value.isNotEmpty()) {
             Text(
                 text = viewModel.loginError.value,

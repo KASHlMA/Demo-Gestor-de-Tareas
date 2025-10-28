@@ -37,14 +37,13 @@ fun ForgotPasswordScreen(navController: NavController) {
 
         Text("Ingresa tu correo:")
 
-        // Aquí podrías usar tu componente de input reutilizable
         UserInputField(
             viewModel = viewModel(),
             label = "Correo"
         )
 
         PrimaryButton("Recuperar contraseña") {
-            // Después de recuperar la contraseña, regresar al login
+
             navController.navigate("login") {
                 popUpTo("forgot_password") { inclusive = true }
             }
