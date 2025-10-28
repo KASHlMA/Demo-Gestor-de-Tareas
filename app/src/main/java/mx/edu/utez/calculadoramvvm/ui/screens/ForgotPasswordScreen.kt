@@ -31,7 +31,7 @@ fun ForgotPasswordScreen(navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically)
     ) {
-        CircularImage(imageRes = R.drawable.contra, size = 150)
+        CircularImage(imageRes = R.drawable.contra, size = 170)
 
         Title("Recuperar contraseña")
 

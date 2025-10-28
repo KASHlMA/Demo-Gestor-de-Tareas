@@ -33,7 +33,7 @@ fun RegisterScreen(viewModel: LoginViewModel, navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically)
     ) {
-        CircularImage(imageRes = R.drawable.administrador_de_tareas_gratis_header, size = 150)
+        CircularImage(imageRes = R.drawable.administrador_de_tareas_gratis_header, size = 200)
 
         Title("Bienvenido al registro del gestor de tareas")
 
