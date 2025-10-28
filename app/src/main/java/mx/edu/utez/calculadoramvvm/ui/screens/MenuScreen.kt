@@ -147,7 +147,7 @@ fun MenuScreen(viewModel: MenuViewModel, navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            CircularImage(R.drawable.maleprofile)
+            CircularImage(R.drawable.gatocar)
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -178,9 +178,10 @@ fun MenuScreen(viewModel: MenuViewModel, navController: NavController) {
                         color = Color.White
                     )
                     Text(
-                        text = "Keilo Vuctoria Gonzalez",
+                        text = "Shasha Victoria Gonzalez",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = Color.White
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold
                     )
                 }
             }
