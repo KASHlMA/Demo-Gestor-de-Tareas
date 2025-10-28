@@ -13,7 +13,7 @@ fun PrimaryButton(
         onClick = onClick,
         modifier = Modifier,
         shape = MaterialTheme.shapes.medium,
-        elevation = ButtonDefaults.buttonElevation(4.dp),
+        elevation = ButtonDefaults.buttonElevation(6.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = Color(0xFF6650a4)
         )

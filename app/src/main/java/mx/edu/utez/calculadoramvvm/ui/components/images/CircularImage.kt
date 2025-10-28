@@ -14,7 +14,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun CircularImage(imageRes: Int, size: Int = 200) {
+fun CircularImage(imageRes: Int, size: Int = 220) {
     Image(
         painter = painterResource(id = imageRes),
         contentDescription = "Imagen circular",

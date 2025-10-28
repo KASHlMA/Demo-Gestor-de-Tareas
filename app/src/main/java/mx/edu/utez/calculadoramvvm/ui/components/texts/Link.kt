@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun Link(
     text: String,
-    fontSize: Int = 15,
+    fontSize: Int = 17,
     color: Color = Color.Blue,
     textAlign: TextAlign = TextAlign.Start,
     modifier: Modifier = Modifier,
