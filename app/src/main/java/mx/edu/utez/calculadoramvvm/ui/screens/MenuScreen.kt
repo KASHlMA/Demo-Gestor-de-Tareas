@@ -147,7 +147,7 @@ fun MenuScreen(viewModel: MenuViewModel, navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            CircularImage(R.drawable.maleprofile)
+            CircularImage(R.drawable.gatocar)
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
