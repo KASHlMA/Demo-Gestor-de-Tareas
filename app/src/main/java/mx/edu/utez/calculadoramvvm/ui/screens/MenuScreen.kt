@@ -1,36 +1,15 @@
 package mx.edu.utez.calculadoramvvm.ui.screens
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.ExitToApp
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,162 +19,120 @@ import androidx.navigation.NavController
 import mx.edu.utez.calculadoramvvm.R
 import mx.edu.utez.calculadoramvvm.ui.components.images.CircularImage
 import mx.edu.utez.calculadoramvvm.viewmodel.MenuViewModel
-
+import mx.edu.utez.calculadoramvvm.data.model.Task
 @Composable
 fun MenuScreen(viewModel: MenuViewModel, navController: NavController) {
-
-    var showDialog by remember { mutableStateOf(false) }
-
-    var showEditDialog by remember { mutableStateOf(false) }
-    var editTitle by remember { mutableStateOf("") }
-    var editDescription by remember { mutableStateOf("") }
+    val tasks by viewModel.tasks.collectAsState(initial = emptyList<Task>())
 
     var showAddDialog by remember { mutableStateOf(false) }
-    var addTitle by remember { mutableStateOf("") }
-    var addDescription by remember { mutableStateOf("") }
+    var showEditDialog by remember { mutableStateOf(false) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
 
-    if (showDialog) {
-        AlertDialog(
-            onDismissRequest = { showDialog = false },
-            title = {
-                Text(text = "Eliminar")
-            },
-            text = {
-                Text("Estas seguro que deseas eliminar")
-            },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        showDialog = false
-                    }
-                ) {
-                    Text("Eliminar")
-                }
-            },
-            dismissButton = {
-                TextButton(
-                    onClick = {
-                        showDialog = false
-                    }
-                ) {
-                    Text("Cancelar")
-                }
-            }
-        )
-    }
+    var currentTask by remember { mutableStateOf<Task?>(null) }
+    var title by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf("") }
 
-    if (showEditDialog) {
-        AlertDialog(
-            onDismissRequest = { showEditDialog = false },
-            title = {
-                Text("Editar")
-            },
-            text = {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Text("Titulo de la tarea")
-                    OutlinedTextField(
-                        value = editTitle,
-                        onValueChange = { editTitle = it },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    Text("Descripcion de la tarea")
-                    OutlinedTextField(
-                        value = editDescription,
-                        onValueChange = { editDescription = it },
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-            },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        showEditDialog = false
-                    }
-                ) {
-                    Text("Editar")
-                }
-            },
-            dismissButton = {
-                TextButton(
-                    onClick = {
-                        showEditDialog = false
-                    }
-                ) {
-                    Text("Cancelar")
-                }
-            }
-        )
-    }
-
+    // ----------- Diálogo de agregar tarea ------------
     if (showAddDialog) {
         AlertDialog(
             onDismissRequest = { showAddDialog = false },
-            title = {
-                Text("Agregar tarea")
-            },
+            title = { Text("Agregar tarea") },
             text = {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Text("Titulo de la tarea")
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     OutlinedTextField(
-                        value = addTitle,
-                        onValueChange = { addTitle = it },
-                        modifier = Modifier.fillMaxWidth(),
-                        placeholder = { Text("Ingles") }
+                        value = title,
+                        onValueChange = { title = it },
+                        label = { Text("Título") }
                     )
-                    Text("Descripcion de la tarea")
                     OutlinedTextField(
-                        value = addDescription,
-                        onValueChange = { addDescription = it },
-                        modifier = Modifier.fillMaxWidth(),
-                        placeholder = { Text("Hacer la plataforma antes del sabado") }
+                        value = description,
+                        onValueChange = { description = it },
+                        label = { Text("Descripción") }
                     )
                 }
             },
             confirmButton = {
-                TextButton(
-                    onClick = {
-                        showAddDialog = false
-                        addTitle = ""
-                        addDescription = ""
+                TextButton(onClick = {
+                    if (title.isNotBlank() && description.isNotBlank()) {
+                        viewModel.addTask(title, description)
                     }
-                ) {
+                    title = ""
+                    description = ""
+                    showAddDialog = false
+                }) {
                     Text("Agregar")
                 }
             },
             dismissButton = {
-                TextButton(
-                    onClick = {
-                        showAddDialog = false
-                        addTitle = ""
-                        addDescription = ""
-                    }
-                ) {
+                TextButton(onClick = { showAddDialog = false }) {
                     Text("Cancelar")
                 }
             }
         )
     }
 
+    // ----------- Diálogo de editar tarea ------------
+    if (showEditDialog && currentTask != null) {
+        AlertDialog(
+            onDismissRequest = { showEditDialog = false },
+            title = { Text("Editar tarea") },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    OutlinedTextField(
+                        value = title,
+                        onValueChange = { title = it },
+                        label = { Text("Título") }
+                    )
+                    OutlinedTextField(
+                        value = description,
+                        onValueChange = { description = it },
+                        label = { Text("Descripción") }
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    currentTask?.let {
+                        viewModel.updateTask(it.copy(title = title, description = description))
+                    }
+                    showEditDialog = false
+                }) {
+                    Text("Guardar")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showEditDialog = false }) {
+                    Text("Cancelar")
+                }
+            }
+        )
+    }
+
+    // ----------- Diálogo de eliminar tarea ------------
+    if (showDeleteDialog && currentTask != null) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = { Text("Eliminar tarea") },
+            text = { Text("¿Seguro que deseas eliminar esta tarea?") },
+            confirmButton = {
+                TextButton(onClick = {
+                    viewModel.deleteTask(currentTask!!)
+                    showDeleteDialog = false
+                }) { Text("Eliminar") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteDialog = false }) { Text("Cancelar") }
+            }
+        )
+    }
 
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {
-                    addTitle = ""
-                    addDescription = ""
-                    showAddDialog = true
-                },
+                onClick = { showAddDialog = true },
                 containerColor = Color.White
             ) {
-                Icon(
-                    Icons.Default.Add,
-                    contentDescription = "Agregar tarea",
-                    tint = Color.Black
-                )
+                Icon(Icons.Default.Add, contentDescription = "Agregar", tint = Color.Black)
             }
         }
     ) { innerPadding ->
@@ -203,188 +140,70 @@ fun MenuScreen(viewModel: MenuViewModel, navController: NavController) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(30.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(20.dp)
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             CircularImage(R.drawable.gatocar)
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                IconButton(
-                    onClick = {
-                        navController.navigate("login") {
-                            popUpTo("menu") { inclusive = true }
-                        }
-                    }
-                ) {
-                    Icon(
-                        Icons.Default.ExitToApp,
-                        contentDescription = "Cerrar sesion",
-                        tint = Color.White
-                    )
-                }
+            Spacer(modifier = Modifier.height(10.dp))
 
-                Column(
-                    horizontalAlignment = Alignment.End
-                ) {
-                    Text(
-                        text = "Imogen",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
-                    )
-                    Text(
-                        text = "Shasha Victoria Gonzalez",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = Color.Black,
-                        fontWeight = FontWeight.Bold
-                    )
+            // Botón de cerrar sesión
+            IconButton(onClick = {
+                navController.navigate("login") {
+                    popUpTo("menu") { inclusive = true }
                 }
+            }) {
+                Icon(Icons.Default.ExitToApp, contentDescription = "Cerrar sesión", tint = Color.White)
             }
 
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                elevation = CardDefaults.cardElevation(4.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White)
+            Spacer(modifier = Modifier.height(10.dp))
+
+            // ----------- Lista de tareas dinámicas ------------
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = "Buscar tarea",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = Color.Black
-                    )
-                    Icon(
-                        Icons.Default.Search,
-                        contentDescription = "Buscar",
-                        tint = Color.Black
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    elevation = CardDefaults.cardElevation(4.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White)
-                ) {
-                    Column(
-                        modifier = Modifier.padding(16.dp)
+                items(tasks) { task ->
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        elevation = CardDefaults.cardElevation(4.dp),
+                        colors = CardDefaults.cardColors(containerColor = Color.White)
                     ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = "Ejercicio 1",
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold,
-                                color = Color.Black
-                            )
-                            IconButton(
-                                onClick = { showDialog = true }
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Icon(
-                                    Icons.Default.Delete,
-                                    contentDescription = "Eliminar",
-                                    tint = Color.Black
+                                Text(
+                                    text = task.title,
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.Black
                                 )
-                            }
-                        }
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = "Editor",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = Color.Black
-                            )
-                            IconButton(
-                                onClick = {
-                                    editTitle = "Ejercicio 1"
-                                    editDescription = "Hacer la plataforma antes del sabado"
-                                    showEditDialog = true
+                                Row {
+                                    IconButton(onClick = {
+                                        currentTask = task
+                                        title = task.title
+                                        description = task.description
+                                        showEditDialog = true
+                                    }) {
+                                        Icon(Icons.Default.Edit, contentDescription = "Editar", tint = Color.Black)
+                                    }
+                                    IconButton(onClick = {
+                                        currentTask = task
+                                        showDeleteDialog = true
+                                    }) {
+                                        Icon(Icons.Default.Delete, contentDescription = "Eliminar", tint = Color.Black)
+                                    }
                                 }
-                            ) {
-                                Icon(
-                                    Icons.Default.Edit,
-                                    contentDescription = "Editor",
-                                    tint = Color.Black
-                                )
                             }
-                        }
-                    }
-                }
 
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    elevation = CardDefaults.cardElevation(4.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White)
-                ) {
-                    Column(
-                        modifier = Modifier.padding(16.dp)
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
                             Text(
-                                text = "Calculo de variables",
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold,
-                                color = Color.Black
-                            )
-                            IconButton(
-                                onClick = { showDialog = true }
-                            ) {
-                                Icon(
-                                    Icons.Default.Delete,
-                                    contentDescription = "Eliminar",
-                                    tint = Color.Black
-                                )
-                            }
-                        }
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = "Editor",
+                                text = task.description,
                                 style = MaterialTheme.typography.bodyMedium,
-                                color = Color.Black
+                                color = Color.Gray
                             )
-                            IconButton(
-                                onClick = {
-                                    editTitle = "Calculo de variables"
-                                    editDescription = "Terminar los ejercicios de derivadas"
-                                    showEditDialog = true
-                                }
-                            ) {
-                                Icon(
-                                    Icons.Default.Edit,
-                                    contentDescription = "Editor",
-                                    tint = Color.Black
-                                )
-                            }
                         }
                     }
                 }
