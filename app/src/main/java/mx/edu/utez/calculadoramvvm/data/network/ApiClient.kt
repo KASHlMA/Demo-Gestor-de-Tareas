@@ -5,7 +5,9 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 
 object ApiClient {
-    private const val BASE_URL = "http://192.168.100.31:5000/"
+
+    //Se ingresa la url de la api y se cambia aqui dependiendo de la red usando ipconfig para ver la red
+    private const val BASE_URL = "http://192.168.106.25:5000/"
 
     private val logger = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY

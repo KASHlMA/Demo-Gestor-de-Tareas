@@ -19,13 +19,13 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             CalculadoraMVVMTheme {
-                // ✅ Inicializamos la base de datos
+                //  Inicializamos la base de datos
                 val database = AppDatabase.getDatabase(this)
 
-                // ✅ Creamos el repositorio a partir del DAO
+                // Creamos el repositorio a partir del DAO
                 val taskRepository = TaskRepository(database.taskDao())
 
-                // ✅ Creamos el ViewModel usando un Factory
+                //  Creamos el ViewModel usando un Factory
                 val taskViewModel = viewModel<TaskViewModel>(
                     factory = object : ViewModelProvider.Factory {
                         override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
                     }
                 )
 
-                // ✅ Llamamos a Navigation sin pasar parámetros (ya lo crea internamente)
+                //  Llamamos a Navigation sin pasar parámetros (ya lo crea internamente)
                 Navigation()
             }
         }

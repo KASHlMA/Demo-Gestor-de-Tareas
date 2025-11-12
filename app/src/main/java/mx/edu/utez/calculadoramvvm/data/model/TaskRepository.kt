@@ -1,7 +1,6 @@
 package mx.edu.utez.calculadoramvvm.data.model
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import mx.edu.utez.calculadoramvvm.data.network.ApiClient
 import mx.edu.utez.calculadoramvvm.data.network.TaskApiService
 import retrofit2.HttpException
@@ -11,56 +10,48 @@ class TaskRepository(private val taskDao: TaskDao) {
 
     private val api = ApiClient.retrofit.create(TaskApiService::class.java)
 
-    // Se obtienen las tareas desde el servidor
-    fun getAllTasks(): Flow<List<Task>> = flow {
+    // Devuelve un flujo que observa los cambios en la base de datos local
+    fun getAllTasks(): Flow<List<Task>> = taskDao.getAllTasks()
+
+    // Sincroniza la base de datos local con el servidor Flask
+    private suspend fun syncWithServer() {
         try {
-            // Intentar obtener los datos del servidor remoto (Flask)
             val response = api.getTasks()
-            if (response.isSuccessful && !response.body().isNullOrEmpty()) {
-                emit(response.body()!!)
-            } else {
-                // Aqui se emite lo que hay en la base de datos local
-                taskDao.getAllTasks().collect { localList ->
-                    emit(localList)
-                }
+            if (response.isSuccessful && response.body() != null) {
+                val remoteList = response.body()!!
+                // Limpia la base local y guarda las tareas del servidor
+                taskDao.clearAll()
+                remoteList.forEach { taskDao.insertTask(it) }
             }
         } catch (e: IOException) {
-            // Error de conexión o API apagada
-            e.printStackTrace()
-            // Se emite la lista local en caso de fallo de red
-            taskDao.getAllTasks().collect { localList ->
-                emit(localList)
-            }
+            e.printStackTrace() // Error de red
         } catch (e: HttpException) {
-            // Error HTTP del servidor (500, 404.)
-            e.printStackTrace()
-            taskDao.getAllTasks().collect { localList ->
-                emit(localList)
-            }
+            e.printStackTrace() // Error HTTP
         } catch (e: Exception) {
-            //Cualquier otro error inesperado
-            e.printStackTrace()
-            taskDao.getAllTasks().collect { localList ->
-                emit(localList)
-            }
+            e.printStackTrace() // Otro tipo de error
         }
     }
 
+    // Inserta una tarea nueva y sincroniza con el servidor
     suspend fun insertTask(task: Task) {
         try {
             val response = api.createTask(task)
             if (response.isSuccessful && response.body() != null) {
                 taskDao.insertTask(response.body()!!)
             } else {
-                //Si falla la API, guardar localmente de todas formas
+                // Guarda localmente si falla el servidor
                 taskDao.insertTask(task)
             }
+            // Sincroniza datos después de guardar
+            syncWithServer()
         } catch (e: Exception) {
             e.printStackTrace()
+            // Si no hay conexión, guarda localmente
             taskDao.insertTask(task)
         }
     }
 
+    // Actualiza una tarea existente
     suspend fun updateTask(task: Task) {
         try {
             val response = api.updateTask(task.id, task)
@@ -69,21 +60,23 @@ class TaskRepository(private val taskDao: TaskDao) {
             } else {
                 taskDao.insertTask(task)
             }
+            syncWithServer()
         } catch (e: Exception) {
             e.printStackTrace()
             taskDao.insertTask(task)
         }
     }
 
+    // Elimina una tarea
     suspend fun deleteTask(task: Task) {
         try {
             val response = api.deleteTask(task.id)
             if (response.isSuccessful) {
                 taskDao.deleteTask(task)
             } else {
-                // Si no responde el servidor, borrar localmente de todos modos
                 taskDao.deleteTask(task)
             }
+            syncWithServer()
         } catch (e: Exception) {
             e.printStackTrace()
             taskDao.deleteTask(task)
