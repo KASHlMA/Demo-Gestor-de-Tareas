@@ -143,7 +143,7 @@ fun MenuScreen(viewModel: MenuViewModel, navController: NavController) {
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            CircularImage(R.drawable.gatocar)
+            CircularImage(R.drawable.administrador_de_tareas_gratis_header)
 
             Spacer(modifier = Modifier.height(10.dp))
 
