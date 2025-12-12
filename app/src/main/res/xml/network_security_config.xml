@@ -2,7 +2,7 @@
 <network-security-config>
     <domain-config cleartextTrafficPermitted="true">
         //Se ingresa la url de la api y se cambia aqui dependiendo de la red usando ipconfig para ver la red
-        <domain includeSubdomains="true">192.168.106.25</domain>
+        <domain includeSubdomains="true">192.168.109.215</domain>
         <domain includeSubdomains="true">localhost</domain>
     </domain-config>
 </network-security-config>
